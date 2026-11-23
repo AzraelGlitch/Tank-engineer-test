@@ -1,0 +1,1000 @@
+[gd_scene load_steps=13 format=3]
+
+[sub_resource type="Environment" id="Environment_garage"]
+background_mode = 2
+background_color = Color(0.09, 0.13, 0.18, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.56, 0.65, 0.78, 1)
+ambient_light_energy = 0.65
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="Material_armor"]
+albedo_color = Color(0.24, 0.31, 0.32, 1)
+metallic = 0.72
+roughness = 0.42
+
+[sub_resource type="StandardMaterial3D" id="Material_edge"]
+albedo_color = Color(0.12, 0.16, 0.17, 1)
+metallic = 0.82
+roughness = 0.34
+
+[sub_resource type="StandardMaterial3D" id="Material_rubber"]
+albedo_color = Color(0.035, 0.043, 0.045, 1)
+metallic = 0.0
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Material_steel"]
+albedo_color = Color(0.43, 0.46, 0.44, 1)
+metallic = 0.85
+roughness = 0.28
+
+[sub_resource type="StandardMaterial3D" id="Material_floor"]
+albedo_color = Color(0.19, 0.21, 0.23, 1)
+metallic = 0.1
+roughness = 0.76
+
+[sub_resource type="StandardMaterial3D" id="Material_accent"]
+albedo_color = Color(0.82, 0.54, 0.16, 1)
+metallic = 0.4
+roughness = 0.42
+
+[sub_resource type="StandardMaterial3D" id="Material_glass"]
+albedo_color = Color(0.10, 0.20, 0.25, 1)
+metallic = 0.55
+roughness = 0.17
+
+[sub_resource type="BoxMesh" id="Mesh_box"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="CylinderMesh" id="Mesh_wheel"]
+top_radius = 0.5
+bottom_radius = 0.5
+height = 0.2
+radial_segments = 24
+
+[sub_resource type="BoxShape3D" id="Shape_floor"]
+size = Vector3(120, 0.5, 120)
+
+[sub_resource type="BoxShape3D" id="Shape_platform"]
+size = Vector3(9, 0.6, 14)
+
+[node name="IronForge" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_garage")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-48, -30, 0)
+light_energy = 1.4
+shadow_enabled = true
+
+[node name="Garage" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Garage"]
+position = Vector3(0, -0.45, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Garage/Floor"]
+shape = SubResource("Shape_floor")
+
+[node name="Mesh" type="MeshInstance3D" parent="Garage/Floor"]
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_floor")
+scale = Vector3(120, 0.5, 120)
+
+[node name="DisplayPlatform" type="StaticBody3D" parent="Garage"]
+position = Vector3(0, 0.05, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Garage/DisplayPlatform"]
+shape = SubResource("Shape_platform")
+
+[node name="Mesh" type="MeshInstance3D" parent="Garage/DisplayPlatform"]
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_edge")
+scale = Vector3(9, 0.6, 14)
+
+[node name="GarageKeyLight" type="OmniLight3D" parent="Garage"]
+position = Vector3(-5, 8, 2)
+light_color = Color(0.72, 0.85, 1, 1)
+light_energy = 2.4
+omni_range = 22
+shadow_enabled = true
+
+[node name="GarageFillLight" type="OmniLight3D" parent="Garage"]
+position = Vector3(5, 6, -4)
+light_color = Color(1, 0.76, 0.53, 1)
+light_energy = 1.8
+omni_range = 18
+
+[node name="VehicleAssembly" type="Node3D" parent="."]
+position = Vector3(0, 1.35, 0)
+
+[node name="Hull" type="Node3D" parent="VehicleAssembly"]
+
+[node name="LowerHull" type="MeshInstance3D" parent="VehicleAssembly/Hull"]
+position = Vector3(0, 0, 0)
+scale = Vector3(2.85, 0.9, 5.7)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_armor")
+
+[node name="UpperHull" type="MeshInstance3D" parent="VehicleAssembly/Hull"]
+position = Vector3(0, 0.62, -0.15)
+scale = Vector3(2.65, 0.55, 4.8)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_armor")
+
+[node name="FrontGlacis" type="MeshInstance3D" parent="VehicleAssembly/Hull"]
+position = Vector3(0, 0.32, -2.77)
+scale = Vector3(2.55, 0.38, 0.52)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="EngineDeck" type="MeshInstance3D" parent="VehicleAssembly/Hull"]
+position = Vector3(0, 0.95, 1.76)
+scale = Vector3(2.3, 0.08, 1.8)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_edge")
+
+[node name="LeftRunningGear" type="Node3D" parent="VehicleAssembly"]
+
+[node name="SideSkirtLeft" type="MeshInstance3D" parent="VehicleAssembly/Hull"]
+position = Vector3(-1.52, 0.45, 0)
+scale = Vector3(0.18, 0.47, 5.6)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_edge")
+
+[node name="RoadWheel_1" type="Node3D" parent="VehicleAssembly/LeftRunningGear"]
+position = Vector3(-1.54, -0.42, -2.0)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/RoadWheel_1"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="RoadWheel_2" type="Node3D" parent="VehicleAssembly/LeftRunningGear"]
+position = Vector3(-1.54, -0.42, -1.2)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/RoadWheel_2"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="RoadWheel_3" type="Node3D" parent="VehicleAssembly/LeftRunningGear"]
+position = Vector3(-1.54, -0.42, -0.4)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/RoadWheel_3"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="RoadWheel_4" type="Node3D" parent="VehicleAssembly/LeftRunningGear"]
+position = Vector3(-1.54, -0.42, 0.4)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/RoadWheel_4"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="RoadWheel_5" type="Node3D" parent="VehicleAssembly/LeftRunningGear"]
+position = Vector3(-1.54, -0.42, 1.2)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/RoadWheel_5"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="RoadWheel_6" type="Node3D" parent="VehicleAssembly/LeftRunningGear"]
+position = Vector3(-1.54, -0.42, 2.0)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/RoadWheel_6"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="Idler" type="Node3D" parent="VehicleAssembly/LeftRunningGear"]
+position = Vector3(-1.54, -0.30, -2.65)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/Idler"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.85, 0.25, 0.85)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="Sprocket" type="Node3D" parent="VehicleAssembly/LeftRunningGear"]
+position = Vector3(-1.54, -0.30, 2.65)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/Sprocket"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.98, 0.25, 0.98)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="TrackAssembly" type="Node3D" parent="VehicleAssembly/LeftRunningGear"]
+
+[node name="LowerLink_00" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -2.62)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_00" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -2.62)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_01" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -2.41)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_01" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -2.41)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_02" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -2.201)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_02" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -2.201)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_03" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -1.991)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_03" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -1.991)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_04" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -1.782)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_04" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -1.782)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_05" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -1.572)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_05" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -1.572)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_06" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -1.362)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_06" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -1.362)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_07" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -1.153)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_07" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -1.153)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_08" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -0.943)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_08" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -0.943)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_09" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -0.734)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_09" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -0.734)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_10" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -0.524)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_10" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -0.524)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_11" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -0.314)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_11" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -0.314)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_12" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, -0.105)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_12" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, -0.105)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_13" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 0.105)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_13" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 0.105)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_14" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 0.314)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_14" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 0.314)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_15" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 0.524)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_15" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 0.524)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_16" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 0.734)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_16" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 0.734)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_17" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 0.943)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_17" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 0.943)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_18" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 1.153)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_18" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 1.153)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_19" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 1.362)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_19" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 1.362)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_20" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 1.572)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_20" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 1.572)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_21" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 1.782)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_21" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 1.782)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_22" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 1.991)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_22" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 1.991)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_23" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 2.201)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_23" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 2.201)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_24" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 2.41)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_24" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 2.41)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_25" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, -0.91, 2.62)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_25" type="MeshInstance3D" parent="VehicleAssembly/LeftRunningGear/TrackAssembly"]
+position = Vector3(-1.54, 0.13, 2.62)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="RightRunningGear" type="Node3D" parent="VehicleAssembly"]
+
+[node name="SideSkirtRight" type="MeshInstance3D" parent="VehicleAssembly/Hull"]
+position = Vector3(1.52, 0.45, 0)
+scale = Vector3(0.18, 0.47, 5.6)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_edge")
+
+[node name="RoadWheel_1" type="Node3D" parent="VehicleAssembly/RightRunningGear"]
+position = Vector3(1.54, -0.42, -2.0)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/RoadWheel_1"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="RoadWheel_2" type="Node3D" parent="VehicleAssembly/RightRunningGear"]
+position = Vector3(1.54, -0.42, -1.2)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/RoadWheel_2"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="RoadWheel_3" type="Node3D" parent="VehicleAssembly/RightRunningGear"]
+position = Vector3(1.54, -0.42, -0.4)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/RoadWheel_3"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="RoadWheel_4" type="Node3D" parent="VehicleAssembly/RightRunningGear"]
+position = Vector3(1.54, -0.42, 0.4)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/RoadWheel_4"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="RoadWheel_5" type="Node3D" parent="VehicleAssembly/RightRunningGear"]
+position = Vector3(1.54, -0.42, 1.2)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/RoadWheel_5"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="RoadWheel_6" type="Node3D" parent="VehicleAssembly/RightRunningGear"]
+position = Vector3(1.54, -0.42, 2.0)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/RoadWheel_6"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.72, 0.24, 0.72)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="Idler" type="Node3D" parent="VehicleAssembly/RightRunningGear"]
+position = Vector3(1.54, -0.30, -2.65)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/Idler"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.85, 0.25, 0.85)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="Sprocket" type="Node3D" parent="VehicleAssembly/RightRunningGear"]
+position = Vector3(1.54, -0.30, 2.65)
+
+[node name="WheelVisual" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/Sprocket"]
+rotation_degrees = Vector3(0, 0, 90)
+scale = Vector3(0.98, 0.25, 0.98)
+mesh = SubResource("Mesh_wheel")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="TrackAssembly" type="Node3D" parent="VehicleAssembly/RightRunningGear"]
+
+[node name="LowerLink_00" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -2.62)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_00" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -2.62)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_01" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -2.41)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_01" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -2.41)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_02" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -2.201)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_02" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -2.201)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_03" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -1.991)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_03" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -1.991)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_04" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -1.782)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_04" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -1.782)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_05" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -1.572)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_05" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -1.572)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_06" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -1.362)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_06" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -1.362)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_07" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -1.153)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_07" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -1.153)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_08" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -0.943)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_08" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -0.943)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_09" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -0.734)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_09" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -0.734)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_10" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -0.524)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_10" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -0.524)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_11" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -0.314)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_11" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -0.314)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_12" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, -0.105)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_12" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, -0.105)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_13" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 0.105)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_13" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 0.105)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_14" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 0.314)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_14" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 0.314)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_15" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 0.524)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_15" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 0.524)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_16" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 0.734)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_16" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 0.734)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_17" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 0.943)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_17" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 0.943)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_18" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 1.153)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_18" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 1.153)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_19" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 1.362)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_19" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 1.362)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_20" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 1.572)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_20" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 1.572)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_21" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 1.782)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_21" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 1.782)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_22" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 1.991)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_22" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 1.991)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_23" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 2.201)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_23" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 2.201)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_24" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 2.41)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_24" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 2.41)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="LowerLink_25" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, -0.91, 2.62)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="UpperLink_25" type="MeshInstance3D" parent="VehicleAssembly/RightRunningGear/TrackAssembly"]
+position = Vector3(1.54, 0.13, 2.62)
+scale = Vector3(0.48, 0.12, 0.18)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_rubber")
+
+[node name="TurretPivot" type="Node3D" parent="VehicleAssembly"]
+position = Vector3(0, 1.25, -0.55)
+
+[node name="TurretBody" type="MeshInstance3D" parent="VehicleAssembly/TurretPivot"]
+position = Vector3(0, 0.27, 0)
+scale = Vector3(2.15, 0.78, 2.35)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_armor")
+
+[node name="TurretRoof" type="MeshInstance3D" parent="VehicleAssembly/TurretPivot"]
+position = Vector3(0, 0.71, 0.15)
+scale = Vector3(1.75, 0.12, 1.75)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="CommanderHatch" type="MeshInstance3D" parent="VehicleAssembly/TurretPivot"]
+position = Vector3(0.55, 0.86, 0.48)
+scale = Vector3(0.62, 0.22, 0.62)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_edge")
+
+[node name="GunElevationPivot" type="Node3D" parent="VehicleAssembly/TurretPivot"]
+position = Vector3(0, 0.24, -1.12)
+
+[node name="Mantlet" type="MeshInstance3D" parent="VehicleAssembly/TurretPivot/GunElevationPivot"]
+position = Vector3(0, 0, -0.08)
+scale = Vector3(1.1, 0.62, 0.42)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="Barrel" type="MeshInstance3D" parent="VehicleAssembly/TurretPivot/GunElevationPivot"]
+position = Vector3(0, 0, -1.66)
+scale = Vector3(0.26, 0.26, 3.1)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_steel")
+
+[node name="MuzzleSleeve" type="MeshInstance3D" parent="VehicleAssembly/TurretPivot/GunElevationPivot"]
+position = Vector3(0, 0, -3.14)
+scale = Vector3(0.4, 0.38, 0.25)
+mesh = SubResource("Mesh_box")
+surface_material_override/0 = SubResource("Material_edge")
+
+[node name="InspectionCamera" type="Camera3D" parent="."]
+position = Vector3(8, 6.1, 10)
+rotation_degrees = Vector3(-23, 38, 0)
+current = true
+fov = 55.0
+
+[node name="Interface" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="Interface"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Interface/HUD"]
+offset_left = 26.0
+offset_top = 22.0
+offset_right = 470.0
+offset_bottom = 72.0
+theme_override_font_sizes/font_size = 30
+text = "IRONFORGE  |  ENGINEERING BAY"
+
+[node name="Status" type="Label" parent="Interface/HUD"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 26.0
+offset_top = -64.0
+offset_right = 820.0
+offset_bottom = -20.0
+text = "Assembly preview • editor and physics scripts pending"
+
